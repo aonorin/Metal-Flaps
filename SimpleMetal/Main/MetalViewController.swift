@@ -15,7 +15,7 @@ class MetalViewController: UIViewController,MetalViewProtocol {
     
     var metalView: MetalView!
     
-    let device: MTLDevice = MTLCreateSystemDefaultDevice()
+    let device: MTLDevice = MTLCreateSystemDefaultDevice()!
     var commandQ: MTLCommandQueue?
     var scene: Scene?
     var baseEffect: BaseEffect?
@@ -23,7 +23,7 @@ class MetalViewController: UIViewController,MetalViewProtocol {
     var fpsLabel: UILabel!
     
     //UIViewController
-    required init(coder aDecoder: NSCoder)
+    required init?(coder aDecoder: NSCoder)
     {
         super.init(coder: aDecoder)
     }
@@ -75,7 +75,7 @@ class MetalViewController: UIViewController,MetalViewProtocol {
     {
         if let commandQ = commandQ
         {
-            var matrix: Matrix4 = Matrix4()
+            let matrix: Matrix4 = Matrix4()
             scene!.render(commandQ, metalView: metalView, parentMVMatrix: matrix)
         }
     }

@@ -73,7 +73,7 @@ class FlapyScene: Scene {
 
         for var i = 0; i<numberOfPipes; i++
         {
-            var pipe = PipeWall(name: "pipeWall\(i)", baseEffect: baseEffect, heightBetween: 2*pipeWidth, height: sceneHeight, width: pipeWidth)
+            let pipe = PipeWall(name: "pipeWall\(i)", baseEffect: baseEffect, heightBetween: 2*pipeWidth, height: sceneHeight, width: pipeWidth)
             pipe.positionX = startOffset + (gap + pipeWidth)*Float(i)
             pipe.positionZ = sceneWidth * 0.2
             pipe.tag = i
@@ -138,12 +138,12 @@ class FlapyScene: Scene {
     
     func updatePipes(delta: CFTimeInterval)
     {
-        var deltaX = Float(delta) * pipesVelocity
+        let deltaX = Float(delta) * pipesVelocity
         
         for pipe in pipeWalls
         {
             pipe.positionX -= deltaX
-            var leftMargin:Float = sceneWidth + pipe.width
+            let leftMargin:Float = sceneWidth + pipe.width
             if pipe.positionX <= -leftMargin
             {
                 var tag = pipe.tag - 1
@@ -164,12 +164,12 @@ class FlapyScene: Scene {
     func updatePlayer(delta: CFTimeInterval)
     {
         // Apply gravity
-        var gravity = CGPoint(x: CGFloat(0.0) * CGFloat(delta), y: CGFloat(-self.gravity) * CGFloat(delta))
-        var gravityStep = CGPoint(x: CGFloat(gravity.x) * CGFloat(delta), y: gravity.y * CGFloat(delta))
+        let gravity = CGPoint(x: CGFloat(0.0) * CGFloat(delta), y: CGFloat(-self.gravity) * CGFloat(delta))
+        //var gravityStep = CGPoint(x: CGFloat(gravity.x) * CGFloat(delta), y: gravity.y * CGFloat(delta))
         playerVelocity = CGPoint(x: playerVelocity.x + gravity.x, y: playerVelocity.y + gravity.y)
         
         // Apply velocity
-        var velocityStep = CGPoint(x: playerVelocity.x * CGFloat(delta), y: playerVelocity.y * CGFloat(delta))
+        let velocityStep = CGPoint(x: playerVelocity.x * CGFloat(delta), y: playerVelocity.y * CGFloat(delta))
         ram.positionY = Float(ram.positionY) + Float(velocityStep.y)
         // Temporary halt when hits ground
         if (ram.positionY <= 0.0-height*0.39) {
@@ -213,7 +213,7 @@ class FlapyScene: Scene {
     {
         for var i = 0; i<numberOfPipes; i++
         {
-            var pipe = pipeWalls[i]
+            let pipe = pipeWalls[i]
             pipe.positionX = startOffset + (gap + pipeWidth)*Float(i)
             pipe.positionZ = sceneWidth * 0.2
         }
@@ -221,9 +221,9 @@ class FlapyScene: Scene {
     
     func playSoundWithName(name: String)
     {
-        var path = NSBundle.mainBundle().pathForResource(name, ofType: nil)
-        var url = NSURL(fileURLWithPath: path!)
-        var player = AVAudioPlayer(contentsOfURL: url, error: nil)
+        let path = NSBundle.mainBundle().pathForResource(name, ofType: nil)
+        let url = NSURL(fileURLWithPath: path!)
+        let player = try! AVAudioPlayer(contentsOfURL: url)
         player.volume = 1.0
         player.play()
     }

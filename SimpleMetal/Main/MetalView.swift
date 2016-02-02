@@ -35,13 +35,13 @@ import Metal
         setup()
     }
     required init(coder aDecoder: NSCoder){
-        super.init(coder: aDecoder)
+        super.init(coder: aDecoder)!
         setup()
     }
     
     func display()
     {
-        var frameBuf = frameBuffer as! FrameBuffer
+        let frameBuf = frameBuffer as! FrameBuffer
         
         frameBuf.drawableSize = self.bounds.size
         
@@ -66,10 +66,10 @@ import Metal
         return CAMetalLayer.self
     }
     override func layoutSubviews(){
-        var rightConstraint = NSLayoutConstraint(item: fpsLabel!, attribute: .Right, relatedBy: .Equal, toItem: self, attribute: .Right, multiplier: 1.0, constant: 0.0)
-        var botConstraint = NSLayoutConstraint(item: fpsLabel!, attribute: .Bottom, relatedBy: .Equal, toItem: self, attribute: .Bottom, multiplier: 1.0, constant: 0.0)
-        var heightConstraint = NSLayoutConstraint(item: fpsLabel!, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1.0, constant: 25.0)
-        var widthConstraint = NSLayoutConstraint(item: fpsLabel!, attribute: .Width, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1.0, constant: 60.0)
+        let rightConstraint = NSLayoutConstraint(item: fpsLabel!, attribute: .Right, relatedBy: .Equal, toItem: self, attribute: .Right, multiplier: 1.0, constant: 0.0)
+        let botConstraint = NSLayoutConstraint(item: fpsLabel!, attribute: .Bottom, relatedBy: .Equal, toItem: self, attribute: .Bottom, multiplier: 1.0, constant: 0.0)
+        let heightConstraint = NSLayoutConstraint(item: fpsLabel!, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1.0, constant: 25.0)
+        let widthConstraint = NSLayoutConstraint(item: fpsLabel!, attribute: .Width, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1.0, constant: 60.0)
         
         self.addConstraints([rightConstraint,botConstraint,widthConstraint,heightConstraint])
         
@@ -81,7 +81,7 @@ import Metal
     func setup(){
     
         fpsLabel = UILabel(frame: CGRectZero)
-        fpsLabel!.setTranslatesAutoresizingMaskIntoConstraints(false)
+        fpsLabel!.translatesAutoresizingMaskIntoConstraints = false
         fpsLabel!.backgroundColor = UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 0.6)
         self.addSubview(fpsLabel!)
 
@@ -98,7 +98,7 @@ import Metal
         _metalLayer.presentsWithTransaction = false
         _metalLayer.drawsAsynchronously     = true
         
-        var device = MTLCreateSystemDefaultDevice()
+        let device = MTLCreateSystemDefaultDevice()
         
         _metalLayer.device          = device
         _metalLayer.pixelFormat     = MTLPixelFormat.BGRA8Unorm

@@ -27,7 +27,7 @@ class Scene: Node {
         self.height = height
         
         sceneOffsetZ = (height * 0.5) / tanf(perspectiveAngleRad * 0.5)
-        var ratio: Float = Float(width) / Float(height)
+        let ratio: Float = Float(width) / Float(height)
         
     
         baseEffect.projectionMatrix = Matrix4.makePerspectiveViewAngle(perspectiveAngleRad, aspectRatio: ratio, nearZ: 0.1, farZ: 10.5*sceneOffsetZ)
@@ -39,8 +39,8 @@ class Scene: Node {
     
     func prepareToDraw()
     {
-        var numberOfUniformBuffersToUse = 3*self.numberOfSiblings
-        println("bufs \(numberOfUniformBuffersToUse)")
+        let numberOfUniformBuffersToUse = 3*self.numberOfSiblings
+        print("bufs \(numberOfUniformBuffersToUse)")
         avaliableUniformBuffers = dispatch_semaphore_create(numberOfUniformBuffersToUse)
         self.uniformBufferProvider = UniformsBufferGenerator(numberOfInflightBuffers: CInt(numberOfUniformBuffersToUse), withDevice: baseEffect.device)
         
@@ -49,32 +49,32 @@ class Scene: Node {
     func render(commandQueue: MTLCommandQueue, metalView: MetalView, parentMVMatrix: AnyObject)
     {
         
-        var parentModelViewMatrix: Matrix4 = parentMVMatrix as! Matrix4
-        var myModelViewMatrix: Matrix4 = modelMatrix() as! Matrix4
+        let parentModelViewMatrix: Matrix4 = parentMVMatrix as! Matrix4
+        let myModelViewMatrix: Matrix4 = modelMatrix() as! Matrix4
         myModelViewMatrix.multiplyLeft(parentModelViewMatrix)
-        var projectionMatrix: Matrix4 = baseEffect.projectionMatrix as! Matrix4
+        let projectionMatrix: Matrix4 = baseEffect.projectionMatrix as! Matrix4
         
         
         //We are using 3 uniform buffers, we need to wait in case CPU wants to write in first uniform buffer, while GPU is still using it (case when GPU is 2 frames ahead CPU)
         dispatch_semaphore_wait(avaliableUniformBuffers!, DISPATCH_TIME_FOREVER)
         
         
-        var renderPathDescriptor = metalView.frameBuffer.renderPassDescriptor
-        var commandBuffer = commandQueue.commandBuffer()
+        let renderPathDescriptor = metalView.frameBuffer.renderPassDescriptor
+        let commandBuffer = commandQueue.commandBuffer()
         commandBuffer.addCompletedHandler(
             {
                 (buffer:MTLCommandBuffer!) -> Void in
-                var q = dispatch_semaphore_signal(self.avaliableUniformBuffers!)
+                _ = dispatch_semaphore_signal(self.avaliableUniformBuffers!)
             })
         
         
-        var shouldEndEncodingOnLastChild = vertexCount <= 0
+        _ = vertexCount <= 0
         var commandEncoder: MTLRenderCommandEncoder? = nil
         
         for var i = 0; i < children.count; i++
         {
-            var child = children[i]
-            var lastChild = i == children.count - 1
+            let child = children[i]
+            _ = i == children.count - 1
             commandEncoder = renderNode(child, parentMatrix: myModelViewMatrix, projectionMatrix: projectionMatrix, renderPassDescriptor: renderPathDescriptor, commandBuffer: commandBuffer, encoder: commandEncoder, uniformProvider: uniformBufferProvider)
         }
         

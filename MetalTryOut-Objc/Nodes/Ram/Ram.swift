@@ -4,20 +4,17 @@ import UIKit
 
     init(baseEffect: BaseEffect)
     {
-
         var verticesArray:Array<Vertex> = []
         let path = NSBundle.mainBundle().pathForResource("ram", ofType: "txt")
-            var possibleContent = String(contentsOfFile: path!, encoding: NSUTF8StringEncoding, error: nil)
-
-            if let content = possibleContent {
-            var array = content.componentsSeparatedByString("\n")
-            array.removeLast()
-            for line in array{
-                var vertex = Vertex(text: line)
-                verticesArray.append(vertex)
-            }
-            array.removeAll(keepCapacity: false)
+        let content = try! String(contentsOfFile: path!, encoding: NSUTF8StringEncoding)
+        
+        var array = content.componentsSeparatedByString("\n")
+        array.removeLast()
+        for line in array {
+            let vertex = Vertex(text: line)
+            verticesArray.append(vertex)
         }
+        array.removeAll(keepCapacity: false)
 
 
         super.init(name: "Ram", baseEffect: baseEffect, vertices: verticesArray, vertexCount: verticesArray.count, textureName: "char_ram_col.jpg")

@@ -7,15 +7,13 @@ import UIKit
 
         var verticesArray:Array<Vertex> = []
         let path = NSBundle.mainBundle().pathForResource("pipe", ofType: "txt")
-            var possibleContent = String(contentsOfFile: path!, encoding: NSUTF8StringEncoding, error: nil)
+        let content = try! String(contentsOfFile: path!, encoding: NSUTF8StringEncoding)
 
-            if let content = possibleContent {
-            var array = content.componentsSeparatedByString("\n")
-            array.removeLast()
-            for line in array{
-                var vertex = Vertex(text: line)
-                verticesArray.append(vertex)
-            }
+        var array = content.componentsSeparatedByString("\n")
+        array.removeLast()
+        for line in array {
+            let vertex = Vertex(text: line)
+            verticesArray.append(vertex)
         }
 
         super.init(name: "Pipe", baseEffect: baseEffect, vertices: verticesArray, vertexCount: verticesArray.count, textureName: "pip.png")

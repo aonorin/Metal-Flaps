@@ -81,8 +81,8 @@ import QuartzCore
         //Setup texture if present
         if let texName = textureName
         {
-          var nameComponents = texName.componentsSeparatedByString(".")
-            var mTexture:METLTexture = METLTexture(resourceName: nameComponents[0], ext: nameComponents[1])
+            var nameComponents = texName.componentsSeparatedByString(".")
+            let mTexture:METLTexture = METLTexture(resourceName: nameComponents[0], ext: nameComponents[1])
             mTexture.finalize(baseEffect.device)
             self.texture = mTexture.texture
         }
@@ -100,7 +100,7 @@ import QuartzCore
         
         self.samplerState = generateSamplerStateForTexture(baseEffect.device)
         
-        var depthStateDesc = MTLDepthStencilDescriptor()
+        let depthStateDesc = MTLDepthStencilDescriptor()
         depthStateDesc.depthCompareFunction = MTLCompareFunction.Less
         depthStateDesc.depthWriteEnabled = true
         depthState = baseEffect.device.newDepthStencilStateWithDescriptor(depthStateDesc)
@@ -114,7 +114,7 @@ import QuartzCore
         
         if encoder == nil
         {
-            commandEncoder = commandBuffer.renderCommandEncoderWithDescriptor(renderPassDescriptor)!
+            commandEncoder = commandBuffer.renderCommandEncoderWithDescriptor(renderPassDescriptor)
             commandEncoder.setDepthStencilState(depthState!)
             commandEncoder.setRenderPipelineState(baseEffect.renderPipelineState!)
             commandEncoder.setFragmentSamplerState(samplerState!, atIndex: 0)
@@ -130,16 +130,16 @@ import QuartzCore
         
         for child in node.children
         {
-            var nodeModelMatrix: Matrix4 = node.modelMatrix() as! Matrix4
+            let nodeModelMatrix: Matrix4 = node.modelMatrix() as! Matrix4
             nodeModelMatrix.multiplyLeft(parentMatrix as! Matrix4)
             child.renderNode(child, parentMatrix: nodeModelMatrix, projectionMatrix: projectionMatrix, renderPassDescriptor: renderPassDescriptor, commandBuffer: commandBuffer, encoder: commandEncoder, uniformProvider: uniformProvider)
         }
         
         if node.vertexCount > 0
         {
-            var nodeModelMatrix: Matrix4 = node.modelMatrix() as! Matrix4
+            let nodeModelMatrix: Matrix4 = node.modelMatrix() as! Matrix4
             nodeModelMatrix.multiplyLeft(parentMatrix as! Matrix4)
-            var uniform = node.getUniformsBufferFromUniformsProvider(uniformProvider,mvMatrix: nodeModelMatrix, projMatrix: projectionMatrix, baseEffect: node.baseEffect)
+            let uniform = node.getUniformsBufferFromUniformsProvider(uniformProvider,mvMatrix: nodeModelMatrix, projMatrix: projectionMatrix, baseEffect: node.baseEffect)
             commandEncoder.setVertexBuffer(node.vertexBuffer, offset: 0, atIndex: 0)
             commandEncoder.setVertexBuffer(uniform, offset: 0, atIndex: 1)
             commandEncoder.setFragmentTexture(node.texture, atIndex: 0)
@@ -163,7 +163,7 @@ import QuartzCore
     {
         numberOfSiblings -= child.numberOfSiblings
         var indexes = Array<Int>()
-        for (index, value) in enumerate(children) {
+        for (index, value) in children.enumerate() {
             if value == child
             {
                 indexes.append(index)
@@ -187,7 +187,7 @@ import QuartzCore
     
     func modelMatrix() -> AnyObject //AnyObject is used as a workaround against comiler error, waiting for fix in following betas
     {
-        var matrix = Matrix4()
+        let matrix = Matrix4()
         
         // Scale
         var height: Float = 1.0
@@ -208,12 +208,12 @@ import QuartzCore
         matrix.scale(scaleX * width, y: scaleY * height, z: scaleZ * depth)
         
         //Rotate
-        var initialRotationMatCopy: Matrix4 = (initialRotation as! Matrix4).copy()
+        let initialRotationMatCopy: Matrix4 = (initialRotation as! Matrix4).copy()
         matrix.rotateAroundX(rotationX, y: rotationY, z: rotationZ)
         matrix.multiplyLeft(initialRotationMatCopy)
         
         //Translation
-        var translMat = Matrix4()
+        let translMat = Matrix4()
         translMat.translate(positionX, y: positionY, z: positionZ)
         matrix.multiplyLeft(translMat)
         
@@ -234,7 +234,7 @@ import QuartzCore
     // Generators of buffers which are passed to GPU
     func generateSamplerStateForTexture(device: MTLDevice) -> MTLSamplerState?
     {
-        var pSamplerDescriptor:MTLSamplerDescriptor? = MTLSamplerDescriptor();
+        let pSamplerDescriptor:MTLSamplerDescriptor? = MTLSamplerDescriptor();
         
         if let sampler = pSamplerDescriptor
         {
@@ -251,17 +251,17 @@ import QuartzCore
         }
         else
         {
-            println(">> ERROR: Failed creating a sampler descriptor!")
+            print(">> ERROR: Failed creating a sampler descriptor!")
         }
         
         return device.newSamplerStateWithDescriptor(pSamplerDescriptor!)
     }
     
-    func getUniformsBufferFromUniformsProvider(provider:AnyObject?,mvMatrix: AnyObject, projMatrix: AnyObject,baseEffect: BaseEffect) -> MTLBuffer?
+    func getUniformsBufferFromUniformsProvider(provider:AnyObject?, mvMatrix: AnyObject, projMatrix: AnyObject,baseEffect: BaseEffect) -> MTLBuffer?
     {
-        var mv:Matrix4 = mvMatrix as! Matrix4
-        var proj:Matrix4 = projMatrix as! Matrix4
-        var generator: UniformsBufferGenerator = provider as! UniformsBufferGenerator
+        let mv: Matrix4 = mvMatrix as! Matrix4
+        let proj: Matrix4 = projMatrix as! Matrix4
+        let generator: UniformsBufferGenerator = provider as! UniformsBufferGenerator
         uniformsBuffer = generator.bufferWithProjectionMatrix(proj, modelViewMatrix: mv, withBaseEffect: baseEffect, withModel: self)
         return uniformsBuffer
     }
